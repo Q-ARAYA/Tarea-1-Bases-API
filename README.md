@@ -49,6 +49,12 @@ echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
+### 2.4.1 Extensión SQL Server (mssql) en VS Code
+Para crear los Stored Procedures y sinónimos de forma visual, se usó la extensión
+**SQL Server (mssql)** de Microsoft en VS Code (conectado en modo remoto WSL):
+1. Instalar la extensión `ms-mssql.mssql` desde el marketplace de VS Code.
+2. Conectarse con `Ctrl+Shift+P` → "MS SQL: Connect": server `localhost`, autenticación SQL Login, usuario `sa`, tu contraseña, base de datos `AdventureWorks`, y "Trust server certificate" activado (necesario porque el contenedor no tiene certificado válido).
+
 ### 2.5 Descargar y restaurar AdventureWorks
 El backup se descarga **fuera** del repositorio (pesa ~200MB y no debe subirse a Git):
 ```bash
@@ -78,22 +84,27 @@ sqlcmd -S localhost -U sa -P 'TuPassword123!' -C -d AdventureWorks -Q "SELECT TO
 ```
 
 ### 2.6 Crear los Stored Procedures
-```bash
-sqlcmd -S localhost -U sa -P 'TuPassword123!' -C -i sql/procedures.sql
-```
-Verificar:
-```bash
-sqlcmd -S localhost -U sa -P 'TuPassword123!' -C -d AdventureWorks -Q "SELECT name FROM sys.procedures WHERE name LIKE 'sp_%'"
+Usando la extensión **SQL Server (mssql)** de VS Code:
+1. Conéctate al servidor (`Ctrl+Shift+P` → "MS SQL: Connect", con `localhost`, usuario `sa`, tu contraseña, y "Trust server certificate" activado).
+2. Abre el archivo `sql/procedures.sql` en VS Code.
+3. Selecciona todo el contenido (`Ctrl+A`) y ejecuta con **"Execute Query"** (`Ctrl+Shift+E`) o clic derecho → "Execute Query".
+
+Esto crea los 5 SP directamente sobre la base de datos conectada.
+
+Verificar (puedes usar el árbol de la conexión, expandiendo `AdventureWorks → Programmability → Stored Procedures`, o correr una query rápida en un nuevo archivo `.sql`):
+```sql
+SELECT name FROM sys.procedures WHERE name LIKE 'sp_%';
 ```
 
 ### 2.7 Crear los sinónimos sobre los Stored Procedures
-Como capa extra de abstracción entre la API y los nombres reales de los SP:
-```bash
-sqlcmd -S localhost -U sa -P 'TuPassword123!' -C -i sql/synonyms.sql
-```
-Verificar:
-```bash
-sqlcmd -S localhost -U sa -P 'TuPassword123!' -C -d AdventureWorks -Q "SELECT name, base_object_name FROM sys.synonyms"
+Como capa extra de abstracción entre la API y los nombres reales de los SP. Igual que
+en el paso anterior, con la extensión mssql:
+1. Abre `sql/synonyms.sql` en VS Code (ya conectado a `AdventureWorks`).
+2. Selecciona todo (`Ctrl+A`) y ejecuta con **"Execute Query"**.
+
+Verificar (en el árbol de la conexión, carpeta `Synonyms` de la base de datos, o con una query):
+```sql
+SELECT name, base_object_name FROM sys.synonyms;
 ```
 
 | Sinónimo  | Stored Procedure              |
