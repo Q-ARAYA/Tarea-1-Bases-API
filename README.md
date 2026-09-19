@@ -165,4 +165,4 @@ Probado con Postman (Web + Desktop Agent) y `curl`.
 Elimina el producto con ese ProductID.
 
 ## 5. Video de prueba
-[Enlace al video de YouTube](https://youtube.com/TU-VIDEO-AQUI)
+[Enlace al video de YouTube]([https://youtube.com/TU-VIDEO-AQUI](https://youtu.be/JnrlYXf62N0))
